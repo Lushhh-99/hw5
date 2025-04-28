@@ -21,8 +21,8 @@ static const Worker_T INVALID_ID = (unsigned int)-1;
 
 
 // Add prototypes for any helper functions here
-
-
+bool scheduler(const AvailabilityMatrix& avail, size_t dailyNeed, const size_t maxShifts, DailySchedule& sched, size_t d, size_t s, vector<int>& worked);
+bool canWork(const AvailabilityMatrix& avail, const size_t maxShifts, DailySchedule& sched, size_t d, vector<int>& worked, size_t worker);
 // Add your implementation of schedule() and other helper functions here
 
 bool schedule(
@@ -43,7 +43,7 @@ bool schedule(
      vector<int> worked(numWorker, 0);
     //initializes a schedule
      sched=DailySchedule(numDay, vector<Worker_T>());
-     return canWork(avail, dailyNeed, maxShifts, sched, 0, 0, worked);
+     return scheduler(avail, dailyNeed, maxShifts, sched, 0, 0, worked);
 
 
 
@@ -77,11 +77,11 @@ bool scheduler(const AvailabilityMatrix& avail, size_t dailyNeed, const size_t m
 
       if(sched[d].size()==dailyNeed){
         //recursive call to schedule the next days workflow
-        if(sheduler(avail, dailyNeed, maxShift, sched, d+1, 0, worked)) return true;
+        if(scheduler(avail, dailyNeed, maxShifts, sched, d+1, 0, worked)) return true;
       }
       else{
         //recursive call to schedule the next shift of the day
-        if(sheduler(avail, dailyNeed, maxShift, sched, d, s+1, worked)) return true;
+        if(scheduler(avail, dailyNeed, maxShifts, sched, d, s+1, worked)) return true;
       }
       //backtracking if the scheduling doesnt work and prior info needs to change
       sched[d].pop_back();
@@ -90,3 +90,4 @@ bool scheduler(const AvailabilityMatrix& avail, size_t dailyNeed, const size_t m
   }
   return false;
 }
+
